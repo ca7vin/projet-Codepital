@@ -2,6 +2,13 @@
 /* IMPORTS */
 import { Patients } from "./class.js";
 
+/* CAT */
+let chat = {
+    nom: "Arnold",
+    miauler() {
+        
+    }
+}
 /* PATIENTS */
 let marcus = new Patients("Marcus", "mal indenté", 100, [], "malade", "")
 let optimus = new Patients("Optimus", "unsave", 200, [], "malade", "")
@@ -16,7 +23,7 @@ export let maison = {
 }
 
 /* CIMETIERE */
- export let cimetiere = {
+export let cimetiere = {
     nom: "cimetiere",
     personnes: [],
 }
@@ -72,9 +79,10 @@ export let docteur = {
         }
     },
     patientIn(target) {
-            console.log(`${this.nom} appelle ${target.nom}`)
-            docteur.cabinet.push(target)
-            docteur.salleAttente.splice(docteur.salleAttente.indexOf(target), 1)
+        console.log(`${this.nom} appelle ${target.nom}`)
+        docteur.cabinet.push(target)
+        docteur.salleAttente.splice(docteur.salleAttente.indexOf(target), 1)
+        chat.miauler()
     },
     patientOut(target) {
         docteur.salleAttente.push(target);
@@ -84,42 +92,31 @@ export let docteur = {
 }
 
 console.log(`la salle d'attente du docteur contient : ${docteur.salleAttente.map(patient => patient.nom)}`)
-/* MARCUS */
-docteur.patientIn(marcus)
-docteur.diagnostique(marcus)
-docteur.patientOut(marcus)
-marcus.goTo(docteur, pharmacie)
-marcus.payer(pharmacie)
-marcus.takeCare()
-marcus.goTo(pharmacie, maison)
-/* OPTIMUS */
-docteur.patientIn(optimus)
-docteur.diagnostique(optimus)
-docteur.patientOut(optimus)
-optimus.goTo(docteur, pharmacie)
-optimus.payer(pharmacie)
-optimus.takeCare()
-optimus.goTo(pharmacie, maison)
-/* DARTHVADER */
-docteur.patientIn(darthVader)
-docteur.diagnostique(darthVader)
-docteur.patientOut(darthVader)
-darthVader.goTo(docteur, pharmacie)
-darthVader.payer(pharmacie)
-darthVader.takeCare()
-darthVader.goTo(pharmacie, maison)
-/* SANGOKU */
-docteur.patientIn(sangoku)
-docteur.diagnostique(sangoku)
-docteur.patientOut(sangoku)
-sangoku.goTo(docteur, pharmacie)
-sangoku.payer(pharmacie)
-sangoku.takeCare()
-sangoku.goTo(pharmacie, maison)
-/* SEMICOLON */
-docteur.patientIn(semicolon)
-docteur.diagnostique(semicolon)
-docteur.patientOut(semicolon)
-semicolon.goTo(docteur, pharmacie)
-semicolon.payer(pharmacie)
-semicolon.takeCare()
+
+
+// DEBUGGER
+
+let patients = [marcus, optimus, darthVader, sangoku, semicolon]
+
+
+
+async function test(){
+    let promise = new Promise((resolve, reject) =>{
+        setTimeout(() => {
+            console.log("Test");
+        }, 2000);
+    })
+    await promise
+}
+test()
+
+for (let i = 0; i < patients.length; i++) {
+    
+    docteur.patientIn(patients[i])
+    docteur.diagnostique(patients[i])
+    docteur.patientOut(patients[i])
+    patients[i].goTo(docteur, pharmacie)
+    patients[i].payer(pharmacie)
+    patients[i].takeCare()
+    patients[i].goTo(pharmacie, maison)
+}
