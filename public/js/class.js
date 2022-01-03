@@ -1,3 +1,7 @@
+import { cimetiere, pharmacie, docteur, maison } from "./main.js";
+
+
+
 export class Patients {
     constructor(nom, maladie, argent, poche, etatSante, traitement) {
         this.nom = nom;
@@ -8,42 +12,52 @@ export class Patients {
         this.traitement = traitement;
     }
     goTo(depart, arrivee) {
-        switch (depart) {
-            case docteur:
-                docteur.cabinet.splice(docteur.cabinet.indexOf(this.nom), 1);
-                arrivee.personnes.push(this)
-                break;
-            case pharmacie:
-                pharmacie.personnes.splice(pharmacie.personnes.indexOf(this), 1);
-                arrivee.personnes.push(this);
-                break;
+        if (this.etatSante === "mort") {
+            console.log(`${this.nom} est ${this.etatSante}`)
+        } else {
+            switch (depart.nom) {
+                case "docteur":
+                    depart.cabinet.splice(depart.cabinet.indexOf(this.nom), 1);
+                    arrivee.personnes.push(this)
+                    break;
+                case "pharmacie":
+                    depart.personnes.splice(depart.personnes.indexOf(this), 1);
+                    arrivee.personnes.push(this);
+                    break;
+            }
+            console.log(`${this.nom} se déplace de ${depart.nom} à ${arrivee.nom}`)
         }
-        console.log(`${this.nom} se déplace de ${depart} à ${arrivee}`)
     }
     takeCare() {
-
+        if (this.poche.lenght > 0) {
+            console.log(`${this.nom} prend son ${this.traitement}et est guéri`)
+            this.etatSante = "En bonne santé"
+            console.log(`${this.nom} est maintenant en ${this.etatSante}`)
+        } else {
+            console.log(`${this.nom} n'avait pas de traitement`)
+        }
     }
     payer(target) {
-        switch (target) {
-            case docteur:
+        switch (target.nom) {
+            case "docteur":
                 this.argent -= 50;
-                docteur.argent += 50;
-                console.log(`${this.nom} paye sa consultation au ${docteur.nom}`)
+                target.argent += 50;
+                console.log(`${this.nom} paye sa consultation au ${target.nom} et il lui reste ${this.argent}`)
                 break;
-            case pharmacie:
+            case "pharmacie":
                 switch (this.traitement) {
                     case "ctrl+maj+f":
                         console.log(`${this.nom} est atteint de ${this.maladie} et a demande ${this.traitement}`)
                         if (this.argent >= 60) {
                             console.log(`${this.nom} a assez d'argent pour acheter son traitement et le paye`)
                             this.argent -= 60
-                            pharmacie.argent += 60
+                            target.argent += 60
                             this.poche.push("ctrl+maj+f")
-                            console.log(`${this.nom} reçoit ${this.traitement}`)
+                            console.log(`${this.nom} reçoit ${this.traitement} et il lui reste ${this.argent}`)
                         } else {
                             console.log(`${this.nom} n'a pas assez d'argent pour payer son traitement`)
                             cimetiere.personnes.push(this)
-                            pharmacie.personnes.splice(pharmacie.personnes.indexOf(this), 1)
+                            target.personnes.splice(target.personnes.indexOf(this), 1)
                             console.log(`${this.nom} meurt de ${this.maladie} et est transporté au ${cimetiere.nom}`)
                             this.etatSante = "mort"
                         }
@@ -54,9 +68,9 @@ export class Patients {
                         if (this.argent >= 100) {
                             console.log(`${this.nom} a assez d'argent pour acheter son traitement et le paye`)
                             this.argent -= 100
-                            pharmacie.argent += 100
+                            target.argent += 100
                             this.poche.push("saveOnFocusChange")
-                            console.log(`${this.nom} reçoit ${this.traitement}`)
+                            console.log(`${this.nom} reçoit ${this.traitement} et il lui reste ${this.argent}`)
                         } else {
                             console.log(`${this.nom} n'a pas assez d'argent pour payer son traitement`)
                             cimetiere.personnes.push(this)
@@ -71,9 +85,9 @@ export class Patients {
                         if (this.argent >= 35) {
                             console.log(`${this.nom} a assez d'argent pour acheter son traitement et le paye`)
                             this.argent -= 35
-                            pharmacie.argent += 35
+                            target.argent += 35
                             this.poche.push("checkLinkRelation")
-                            console.log(`${this.nom} reçoit ${this.traitement}`)
+                            console.log(`${this.nom} reçoit ${this.traitement} et il lui reste ${this.argent}`)
                         } else {
                             console.log(`${this.nom} n'a pas assez d'argent pour payer son traitement`)
                             cimetiere.personnes.push(this)
@@ -88,9 +102,9 @@ export class Patients {
                         if (this.argent >= 40) {
                             console.log(`${this.nom} a assez d'argent pour acheter son traitement et le paye`)
                             this.argent -= 40
-                            pharmacie.argent += 40
+                            target.argent += 40
                             this.poche.push("Ventoline")
-                            console.log(`${this.nom} reçoit ${this.traitement}`)
+                            console.log(`${this.nom} reçoit ${this.traitement} et il lui reste ${this.argent}`)
                         } else {
                             console.log(`${this.nom} n'a pas assez d'argent pour payer son traitement`)
                             cimetiere.personnes.push(this)
@@ -105,9 +119,9 @@ export class Patients {
                         if (this.argent >= 20) {
                             console.log(`${this.nom} a assez d'argent pour acheter son traitement et le paye`)
                             this.argent -= 20
-                            pharmacie.argent += 20
+                            target.argent += 20
                             this.poche.push("f12+doc")
-                            console.log(`${this.nom} reçoit ${this.traitement}`)
+                            console.log(`${this.nom} reçoit ${this.traitement} et il lui reste ${this.argent}`)
                         } else {
                             console.log(`${this.nom} n'a pas assez d'argent pour payer son traitement`)
                             cimetiere.personnes.push(this)

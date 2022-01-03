@@ -1,35 +1,4 @@
 
-// ## Description du doctor
-// >Le doctor lui reçoit les patients dans son cabinet. Tout d'abord il les diagnostiques puis se fait payé avant de préscrire un traitement. Attention le doctor fait à chaque fois sortir le patient de son cabinet avant de prendre le suivant. Dans son cabinet il y a son chat de race sphynx pour garder un environemment stérile. Son chat miaule toutes les deux secondes dans la console(bonus). La consultation coûte 50€. Les patients son dans un état de traitement avant de sortir du cabinet.
-
-// |nom|argent|cabinet et salle d'attente|diagnostique|patienTIn|patientOut
-// |---|---|---|---|---|---|
-// |Debugger|0|[chat]
-
-// ### Grille des diagnostiques
-// |maladie|traitement|
-// |---|---|
-// |mal indenté|`ctrl+maj+f`|
-// |unsave|`saveOnFocusChange`|
-// |404|`CheckLinkRelation`|
-// |azmatique|`Ventoline`|
-// |syntaxError|`f12+doc`|
-
-// ## La pharmacie
-// >Les patients iront par après à la pharmacie et recevront leur traitement s'ils ont assez d'argent. Dans le cas ou ils ont assez d'argent ils seront alors en bonne santé sinon ils seront mort et il faudra alors les pousser dans un cimetière.
-
-// ### Tarif des traitements
-// |Traitement|prix|
-// |---|---|
-// |`ctrl+maj+f`|60€
-// |`saveOnFocusChange`|100€
-// |`CheckLinkRelation`|35€
-// |`Ventoline`|40€
-// |`f12+doc`|20€
-
-// # Vérification
-// >Grâce à votre débugger suivé à la trace l'évolution de chacun de vos patients. Vérifier bien qu'il quitte à chaque fois la salle d'attente avant d'entrer dans le cabinet et qu'ils sortent bien du cabinet avant de laisser quelqu'un d'autre entré.
-
 /* IMPORTS */
 import { Patients } from "./class.js";
 
@@ -41,19 +10,19 @@ let darthVader = new Patients("DarthVader", "azmatique", 110, [], "malade", "")
 let semicolon = new Patients("Semicolon", "syntaxError", 60, [], "malade", "")
 
 /* MAISON */
-let maison = {
+export let maison = {
     nom: "maison",
     personnes: [],
 }
 
 /* CIMETIERE */
-let cimetiere = {
+ export let cimetiere = {
     nom: "cimetiere",
     personnes: [],
 }
 
 /* PHARMACIE */
-let pharmacie = {
+export let pharmacie = {
     nom: "pharmacie",
     personnes: [],
     traitements: ["Ventoline", "f12+doc", "checkLinkRelation", "saveOnFocusChange", "ctrl+maj+f"],
@@ -61,8 +30,8 @@ let pharmacie = {
 }
 
 /* DOCTEUR */
-let docteur = {
-    nom: "docteur Paul",
+export let docteur = {
+    nom: "docteur",
     argent: 350,
     cabinet: [],
     salleAttente: [marcus, optimus, sangoku, darthVader, semicolon],
@@ -91,24 +60,21 @@ let docteur = {
         }
         console.log(`${this.nom} attend son paiement avant de vous donner votre prescription`)
         if (diaTarget.argent >= 50) {
-            diaTarget.payer(docteur)
+            diaTarget.payer(this)
             diaTarget.etatSante = "traitement"
-        } else {
+            console.log(`${diaTarget.nom} est en ${diaTarget.etatSante}`)
+        } else if (diaTarget.argent < 50) {
             console.log(`${diaTarget.nom} n'a pas assez d'argent et ne peut pas payer sa consultation`)
             diaTarget.etatSante = "mort"
             cimetiere.personnes.push(diaTarget)
-            docteur.cabinet.splice(docteur.cabinet.indexOf(diaTarget), 1)
+            this.cabinet.splice(this.cabinet.indexOf(diaTarget), 1)
             console.log(`${diaTarget.nom} meurt de ${diaTarget.maladie} et est transporté au ${cimetiere.nom}`)
         }
     },
     patientIn(target) {
-        if (docteur.cabinet.length > 0) {
             console.log(`${this.nom} appelle ${target.nom}`)
             docteur.cabinet.push(target)
             docteur.salleAttente.splice(docteur.salleAttente.indexOf(target), 1)
-        } else {
-            console.log(`Il reste encore ${target.nom} dans le cabinet !`)
-        }
     },
     patientOut(target) {
         docteur.salleAttente.push(target);
@@ -116,3 +82,44 @@ let docteur = {
         console.log(`${this.nom} a finit sa consultation et fait sortir ${target.nom}`)
     }
 }
+
+console.log(`la salle d'attente du docteur contient : ${docteur.salleAttente.map(patient => patient.nom)}`)
+/* MARCUS */
+docteur.patientIn(marcus)
+docteur.diagnostique(marcus)
+docteur.patientOut(marcus)
+marcus.goTo(docteur, pharmacie)
+marcus.payer(pharmacie)
+marcus.takeCare()
+marcus.goTo(pharmacie, maison)
+/* OPTIMUS */
+docteur.patientIn(optimus)
+docteur.diagnostique(optimus)
+docteur.patientOut(optimus)
+optimus.goTo(docteur, pharmacie)
+optimus.payer(pharmacie)
+optimus.takeCare()
+optimus.goTo(pharmacie, maison)
+/* DARTHVADER */
+docteur.patientIn(darthVader)
+docteur.diagnostique(darthVader)
+docteur.patientOut(darthVader)
+darthVader.goTo(docteur, pharmacie)
+darthVader.payer(pharmacie)
+darthVader.takeCare()
+darthVader.goTo(pharmacie, maison)
+/* SANGOKU */
+docteur.patientIn(sangoku)
+docteur.diagnostique(sangoku)
+docteur.patientOut(sangoku)
+sangoku.goTo(docteur, pharmacie)
+sangoku.payer(pharmacie)
+sangoku.takeCare()
+sangoku.goTo(pharmacie, maison)
+/* SEMICOLON */
+docteur.patientIn(semicolon)
+docteur.diagnostique(semicolon)
+docteur.patientOut(semicolon)
+semicolon.goTo(docteur, pharmacie)
+semicolon.payer(pharmacie)
+semicolon.takeCare()
