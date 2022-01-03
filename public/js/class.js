@@ -7,8 +7,18 @@ export class Patients {
         this.etatSante = etatSante;
         this.traitement = traitement;
     }
-    goTo(){
-
+    goTo(depart,arrivee){
+        switch (depart) {
+            case docteur:
+                docteur.cabinet.splice(docteur.cabinet.indexOf(this.nom), 1);
+                arrivee.personnes.push(this)
+                break;
+            case pharmacie:
+                pharmacie.personnes.splice(pharmacie.personnes.indexOf(this), 1);
+                arrivee.personnes.push(this);
+                break;
+        }
+        console.log(`${this.nom} se déplace de ${depart} à ${arrivee}`)
     }
     takeCare(){
 
