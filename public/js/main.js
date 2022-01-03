@@ -6,7 +6,7 @@ import { Patients } from "./class.js";
 let chat = {
     nom: "Arnold",
     miauler() {
-        
+        console.log('MIAOUUUUUUUUUUUUUUUUU');
     }
 }
 /* PATIENTS */
@@ -82,7 +82,6 @@ export let docteur = {
         console.log(`${this.nom} appelle ${target.nom}`)
         docteur.cabinet.push(target)
         docteur.salleAttente.splice(docteur.salleAttente.indexOf(target), 1)
-        chat.miauler()
     },
     patientOut(target) {
         docteur.salleAttente.push(target);
@@ -99,24 +98,25 @@ console.log(`la salle d'attente du docteur contient : ${docteur.salleAttente.map
 let patients = [marcus, optimus, darthVader, sangoku, semicolon]
 
 
+const main = async () => {
+    for (let i = 0; i < patients.length; i++) {
 
-async function test(){
-    let promise = new Promise((resolve, reject) =>{
-        setTimeout(() => {
-            console.log("Test");
-        }, 2000);
-    })
-    await promise
-}
-test()
+        let promise = new Promise(resolve => {
+            docteur.patientIn(patients[i])
+            docteur.diagnostique(patients[i])
+            docteur.patientOut(patients[i])
+            patients[i].goTo(docteur, pharmacie)
+            patients[i].payer(pharmacie)
+            patients[i].takeCare()
+            patients[i].goTo(pharmacie, maison)
+            setTimeout(() => {
+                chat.miauler()
+                resolve()
+            }, 4000)
+        })
 
-for (let i = 0; i < patients.length; i++) {
-    
-    docteur.patientIn(patients[i])
-    docteur.diagnostique(patients[i])
-    docteur.patientOut(patients[i])
-    patients[i].goTo(docteur, pharmacie)
-    patients[i].payer(pharmacie)
-    patients[i].takeCare()
-    patients[i].goTo(pharmacie, maison)
+        await promise.then()
+    }
 }
+
+main()
